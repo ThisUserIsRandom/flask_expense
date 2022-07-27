@@ -59,10 +59,14 @@ def index():
         username = request.form['username']
         password = request.form['password']
         data = database_connection.dostuff.check_data(username,password)
-        if len(data)!=0:
-            session['user'] = request.form['username']
-            return redirect('/home')
-        elif len(data)==0:
+        print(data)
+        if len(data) != 0:
+            if data[0][1] == password:
+                session['user'] = request.form['username']
+                return redirect('/home')
+            else:
+                return redirect('/')
+        else:
             if username == '' or password == '':
                 return redirect('/')
             else:
@@ -71,6 +75,7 @@ def index():
                 database_connection.dostuff.insert_data(query1)
                 database_connection.dostuff.insert_data(query2)
                 return redirect('/')
+            
     else:
         return render_template('index.html')
 
